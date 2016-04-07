@@ -1,0 +1,10 @@
+Use Case:
+ * Engineer starts Oscillo instance (natively, Node, or Python)
+ * Users browse (or load) Impulse landing page in browser
+ * Default landing page lets Users select a data file; supported formats include
+    - SQLite
+    - Excel
+ * ??
+ * Beautiful Paper.js-based Canvas vector graphs appear
+ * Users use said graphs to gain insight into impossibly-complex data sets,
+   thereby saving the world!
