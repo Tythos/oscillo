@@ -1,4 +1,4 @@
-oscillo
+Oscillo
 =======
 
 Oscillo is a lightweight, portable data analysis toolkit. Based on the Impulse
@@ -14,7 +14,8 @@ flexible method of gaining insight into a complex circuit, electronic component,
 sensor, or controller. Take an oscilloscope, attach to the interesting segment
 of your problem, and tune the oscilloscope knobs to reach that sudden moment of
 enlightenment when the waveform solidifies into a solid photonic mass of
-insight into a problem you had thought unsolvable.
+insight--insight into a problem you had thought unsolvable.
 
 Why can't we have that same tool for data problems--infinitely more complex,
-with infinitely more possibility for hidden nuggets of value?
+with infinitely more possibility for hidden nuggets of value? We can, we should,
+and we will!

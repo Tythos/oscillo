@@ -1,0 +1,18 @@
+body {
+	background-color:#000;
+	color:#fff;
+	margin:0;
+}
+
+.entryWrapper {
+	margin:16px;
+}
+
+.carrierClass {
+	font-weight:bold;
+	font-size:24pt;
+}
+
+.carrierDetails img {
+	width:256px;
+}
