@@ -2,6 +2,7 @@
    around a common standard (in-memory SQLite database).
 """
 
+import os
 import xlrd
 import xlwt
 import sqlite3
@@ -78,6 +79,8 @@ class Sqlite:
     """
     @staticmethod
     def save(db, filePath):
+        if os.path.exists(filePath):
+            os.remove(filePath)
         fdb = sqlite3.connect(filePath)
         rows = [row for row in db.iterdump()]
         for row in rows[1:-1]:

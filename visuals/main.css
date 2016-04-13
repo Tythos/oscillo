@@ -4,15 +4,36 @@ body {
 	margin:0;
 }
 
-.entryWrapper {
-	margin:16px;
+.clearfix {
+	clear:both;
 }
 
-.carrierClass {
-	font-weight:bold;
-	font-size:24pt;
+#wrapper {
+    height:100%;
 }
 
-.carrierDetails img {
-	width:256px;
+#browser {
+	float:left;
+    width:20%;
+    background-color:#f00;
+    height:100%;
+}
+
+#workspace {
+    float:left;
+    width:80%;
+    background-color:#0f0;
+    height:100%;
+}
+
+#statusBar {
+    position:absolute;
+    bottom:0;
+    height:16px;
+    background-color:#00f;
+    width:100%;
+}
+
+#browserList dd {
+    margin-left:0;
 }
