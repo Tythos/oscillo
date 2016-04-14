@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>Incremental Implementation Test for Chart.js</title>
+		<script type="text/javascript" src="../../controls/require.js"></script>
+		<script type="text/javascript">
+            window.addEventListener("load", function() {
+                var chart = require('chart', '../..');
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var data = [], data2 = [], ii = 0;
+                var getRandomInt = function(min, max) {
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                };
+
+                for (ii = 0; ii < 20; ii++) {
+                    data.push({
+                        x: ii,
+                        y: 1.5 * getRandomInt(0, 100)
+                    });
+                    data2.push({
+                        x: ii,
+                        y: 0.5 * getRandomInt(0, 100)
+                    });
+                };
+                var myNewChart = new chart(ctx).Scatter([
+                    { label: "dataset 1", data: data },
+                    { label: "dataset 2", data: data2 }
+                ]);
+            });
+        </script>
+	</heal>
+	<body>
+        <canvas id="myChart" width="400" height="400"></canvas>
+	</body>
+</html>
