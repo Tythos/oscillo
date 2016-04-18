@@ -37,3 +37,16 @@ body {
 #browserList dd {
     margin-left:0;
 }
+
+span.editButton {
+    float:right;
+    margin-right:8px;
+}
+
+#browserList dd {
+    margin-left:8px;
+}
+
+#browserList dt {
+    cursor:pointer;
+}

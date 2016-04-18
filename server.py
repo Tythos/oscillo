@@ -27,7 +27,7 @@ class ImpulseServer(object):
             return f.read()
             
     @cherrypy.expose
-    def ajax(self, path, op):
+    def ajax(self, path, op, name=None):
         #if path not in dbCache:
             #dbCache[path] = sqlite3.connect(path)
         #db = dbCache[path]
@@ -38,8 +38,15 @@ class ImpulseServer(object):
             qry = 'SELECT name FROM _queries'
         elif op.lower() == 'getfigures':
             qry = 'SELECT name FROM _figures'
+        elif op.lower() == 'gettable':
+            qry = 'SELECT * FROM %s' % name
+        elif op.lower() == 'getquery':
+            qry = 'SELECT text FROM _queries WHERE name="%s"' % name
+            cur = db.execute(qry)
+            qry = cur.fetchone()[0]
         else:
             raise Exception('Invalid Oscillo data store operation ("%s")' % op)
+        print(' :: ' + qry)
         cur = db.execute(qry)
         hdr = [f[0] for f in cur.description]
         rows = [row for row in cur]
