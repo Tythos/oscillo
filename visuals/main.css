@@ -15,14 +15,14 @@ body {
 #browser {
 	float:left;
     width:20%;
-    background-color:#f00;
+    background-color:#800;
     height:100%;
 }
 
 #workspace {
     float:left;
     width:80%;
-    background-color:#0f0;
+    background-color:#080;
     height:100%;
 }
 
@@ -30,7 +30,7 @@ body {
     position:absolute;
     bottom:0;
     height:16px;
-    background-color:#00f;
+    background-color:#008;
     width:100%;
 }
 
@@ -49,4 +49,9 @@ span.editButton {
 
 #browserList dt {
     cursor:pointer;
+}
+
+#chartCanvas {
+    width:100%;
+    height:100%;
 }

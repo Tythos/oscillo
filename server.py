@@ -44,6 +44,17 @@ class ImpulseServer(object):
             qry = 'SELECT text FROM _queries WHERE name="%s"' % name
             cur = db.execute(qry)
             qry = cur.fetchone()[0]
+        elif op.lower() == 'getfigure':
+            # Figures require several queries for each series
+            qry = 'SELECT * FROM _figures WHERE name="%s"' % name
+            cur = db.execute(qry)
+            fig = cur.fetchone()
+            keys = [k[0] for k in cur.description]
+            ndcs = range(len(keys))
+            fig = dict([(keys[ndx],fig[ndx]) for ndx in ndcs])
+            fig['xdata'] = ImpulseServer.getSeries(db, fig['xseries'], fig['xquery'])
+            fig['ydata'] = ImpulseServer.getSeries(db, fig['yseries'], fig['yquery'])
+            return json.dumps(fig)
         else:
             raise Exception('Invalid Oscillo data store operation ("%s")' % op)
         print(' :: ' + qry)
@@ -51,7 +62,15 @@ class ImpulseServer(object):
         hdr = [f[0] for f in cur.description]
         rows = [row for row in cur]
         rows.insert(0, hdr)
+        db.close()
         return json.dumps(rows)
+        
+    @staticmethod
+    def getSeries(db, series, query):
+        qry = 'SELECT text FROM _queries WHERE name="%s"' % query
+        cur = db.execute(qry)
+        qry = 'SELECT %s FROM (%s)' % (series, cur.fetchone()[0])
+        return [r[0] for r in db.execute(qry)]
         
 if __name__ == "__main__":
     conf = {

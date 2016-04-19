@@ -2,7 +2,9 @@ window.addEventListener("load", function() {
 	// Load dependencies
 	var e = require("elsel");
     var f = require('fetch');
+    var c = require('chart');
     var dataPath = 'data/testFull.sql';
+    var statusTimeout = 0;
     
     // Maximize body area and ensure it is refreshed on resize
     var maximize = function() {
@@ -44,15 +46,28 @@ window.addEventListener("load", function() {
         var data = table.slice(1,table.length);
         return [headers, data];
     };
+    var getFigure = function(name) {
+        var figure = f('ajax?path=' + encodeURIComponent(dataPath) + '&op=getFigure&name=' + name);
+        figure = JSON.parse(figure);
+        xseries = figure['xdata'];
+        yseries = figure['ydata'];
+        figure['xdata'] = undefined;
+        figure['ydata'] = undefined;
+        return [xseries, yseries, figure];
+    };
     
     // Log timestamped messages in status bar
     var log = function(msg) {
         var sb = e('#statusBar');
         var d = new Date();
+        if (statusTimeout != 0) {
+            clearTimeout(statusTimeout);
+        }
         sb.innerHTML = '[' + d.toISOString().replace(/T/, ' ').replace(/Z/, '') + '] ' + msg
-        window.setTimeout(function() {
+        statusTimeout = window.setTimeout(function() {
             sb.innerHTML = '';
-        }, 2500);
+            statusTimeout = 0;
+        }, 1024);
     };
     
     var renderTable = function(headers, data) {
@@ -69,13 +84,44 @@ window.addEventListener("load", function() {
         data.forEach(function(row,ndx) {
             r = document.createElement('tr');
             row.forEach(function(val,ndx) {
-                var c = document.createElement('td');
-                c.innerHTML = val;
-                r.appendChild(c);
+                var col = document.createElement('td');
+                col.innerHTML = val;
+                r.appendChild(col);
             });
             t.appendChild(r);
         });
         ws.appendChild(t);
+    };
+    
+    var renderFigure = function(xdata, ydata, figure) {
+        // Use extended chart.js controller to render this type of figure
+        var ws = e('#workspace');
+        var cn = 'chartCanvas';
+        ws.innerHTML = ''
+        var cv = document.createElement('canvas');
+        cv.setAttribute('id', cn);
+        ws.appendChild(cv);
+        switch (figure['type']) {
+            case 'line':
+                var ctx = cv.getContext('2d');
+                var data = {
+                    labels: xdata,
+                    datasets: [{
+                        label: figure['name'],
+                        data: ydata,
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHightlightStroke: "rgba(220,220,220,1)"
+                    }]
+                };
+                var newChart = new c(ctx).Line(data);
+                break;
+            default:
+                alert('Hey--"' + figure['type'] + '" is not a supported figure type');
+        }
     };
     
     // View function loads selected table/query/figure in the workspace
@@ -84,13 +130,16 @@ window.addEventListener("load", function() {
             case 'table':
                 [headers, data] = getTable(name);
                 renderTable(headers, data);
+                log("Finished loading table '" + name + "'");
                 break;
             case 'query':
                 [headers, data] = getQuery(name);
                 renderTable(headers, data);
+                log("Finished loading query '" + name + "'");
                 break;
             case 'figure':
-                alert("Viewing figure '" + name + "'...");
+                [xseries, yseries, figure] = getFigure(name);
+                renderFigure(xseries, yseries, figure);
                 break;
             default:
                 alert("Oh no! That shouldn't happen...");
