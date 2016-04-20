@@ -55,3 +55,14 @@ span.editButton {
     width:100%;
     height:100%;
 }
+
+.groupTitleAdd {
+    float:right;
+    margin-right:8px;
+    cursor:pointer;
+}
+
+span.delButton {
+    float:right;
+    margin-right:8px;
+}
