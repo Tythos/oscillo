@@ -189,18 +189,21 @@ EditableGrid.prototype.init = function (name, config)
 	this.currentTableid = null;
 
 	if (this.enableSort) {
-		this.sortUpImage = new Image();
-		if ( typeof config != "undefined" && typeof config['sortIconUp'] != "undefined" ) 
-			this.sortUpImage.src = config['sortIconUp'];
-		else
-			this.sortUpImage.src = this.baseUrl + "/images/bullet_arrow_up.png";
+		if ( typeof config != "undefined" && typeof config['sortIconUp'] != "undefined" ) {
+            this.sortUpElement = new Image();
+			this.sortUpElement.src = config['sortIconUp'];
+        } else {
+            this.sortUpElement = document.createElement('span');
+			this.sortUpElement.innerHTML = '&#8593;'
+        }
 
-
-		this.sortDownImage = new Image();
-		if ( typeof config != "undefined" && typeof config['sortIconDown'] != "undefined" ) 
-			this.sortDownImage.src = config['sortIconDown'];
-		else
-			this.sortDownImage.src = this.baseUrl + "/images/bullet_arrow_down.png";
+		if ( typeof config != "undefined" && typeof config['sortIconDown'] != "undefined" ) {
+            this.sortDownElement = new Image();
+			this.sortDownElement.src = config['sortIconDown'];
+        } else {
+            this.sortDownElement = document.createElement('span');
+			this.sortDownElement.innerHTML = '&#8595;'
+        }
 	}
 
 	// restore stored parameters, or use default values if nothing stored
@@ -2548,7 +2551,7 @@ SortHeaderRenderer.prototype.render = function(cell, value)
 		// add an arrow to indicate if sort is ascending or descending
 		if (this.editablegrid.sortedColumnName == this.columnName) {
 			cell.appendChild(document.createTextNode("\u00a0"));
-			cell.appendChild(this.editablegrid.sortDescending ? this.editablegrid.sortDownImage: this.editablegrid.sortUpImage);
+			cell.appendChild(this.editablegrid.sortDescending ? this.editablegrid.sortDownElement: this.editablegrid.sortUpElement);
 		}
 
 		// call user renderer if any

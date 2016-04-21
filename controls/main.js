@@ -3,8 +3,11 @@ window.addEventListener("load", function() {
 	var e = require("elsel");
     var f = require('fetch');
     var c = require('chart');
+    var eg = require('editablegrid');
+    
+    // Configurations
     var dataPath = 'data/testFull.sql';
-    var statusTimeout = 0;
+    var statusTimeout = 1024;
     
     // Maximize body area and ensure it is refreshed on resize
     var maximize = function() {
@@ -67,30 +70,48 @@ window.addEventListener("load", function() {
         statusTimeout = window.setTimeout(function() {
             sb.innerHTML = '';
             statusTimeout = 0;
-        }, 1024);
+        }, statusTimeout);
     };
+    
+    // Methods for rendering object views into the workspace
     
     var renderTable = function(headers, data) {
         var ws = e('#workspace');
         ws.innerHTML = '';
         var t = document.createElement('table');
+        t.setAttribute('id', 'liveTable');
+        var th = document.createElement('thead');
         var r = document.createElement('tr');
+        var md = [];
         headers.forEach(function(val,ndx) {
             var h = document.createElement('th');
             h.innerHTML = val;
             r.appendChild(h);
+            md.push({
+                'name': val,
+                'datatype': 'string',
+                'editable': true
+            });
         });
-        t.appendChild(r);
+        th.appendChild(r);
+        t.appendChild(th);
+        var tb = document.createElement('tbody');
         data.forEach(function(row,ndx) {
             r = document.createElement('tr');
+            //r.setAttribute('id', 'R' + (ndx + 1));
             row.forEach(function(val,ndx) {
                 var col = document.createElement('td');
                 col.innerHTML = val;
                 r.appendChild(col);
             });
-            t.appendChild(r);
+            tb.appendChild(r);
         });
+        t.appendChild(tb);
         ws.appendChild(t);
+        editableGrid = new EditableGrid('mytable');
+        editableGrid.load({ metadata: md });
+        editableGrid.attachToHTMLTable('liveTable');
+        editableGrid.renderGrid();
     };
     
     var renderFigure = function(xdata, ydata, figure) {
@@ -286,25 +307,4 @@ window.addEventListener("load", function() {
     e('#browserList').appendChild(dt);
     
     log('Finished loading');
-    
-    // TESTING EDITABLGRID
-    /*var eg = require('editablegrid');
-    editableGrid = new eg.EditableGrid("DemoGridAttach"); 
-    editableGrid.load({ metadata: [
-        { name: "name", datatype: "string", editable: true },
-        { name: "firstname", datatype: "string", editable: true },
-        { name: "age", datatype: "integer", editable: true },
-        { name: "height", datatype: "double(m,2)", editable: true },
-        { name: "country", datatype: "string", editable: true, values: 
-        { 'Europe': { "be" : "Belgium", "fr" : "France", "uk" : "Great-Britain", "nl": "Nederland"},
-        'America': { "br" : "Brazil", "ca": "Canada", "us" : "USA" },
-        'Africa': { "ng" : "Nigeria", "za": "South-Africa", "zw" : "Zimbabwe" }
-        }
-        },
-        { name: "email", datatype: "email", editable: true },
-        { name: "freelance", datatype: "boolean", editable: true },
-        { name: "lastvisit", datatype: "date", editable: true }
-    ]});
-    editableGrid.attachToHTMLTable('htmlgrid');
-    editableGrid.renderGrid();*/
 });
